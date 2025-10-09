@@ -5,7 +5,6 @@ const navigation = [
   { name: "Home", href: "/", icon: "fas fa-home" },
   { name: "Shop", href: "/shop", icon: "fas fa-store" },
   { name: "My Passport", href: "/my-passport", icon: "fas fa-passport" },
-  { name: "Brand Dashboard", href: "/brand-dashboard", icon: "fas fa-users" },
 ];
 
 export default function Sidebar() {

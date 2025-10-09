@@ -11,7 +11,7 @@
   --card-foreground: hsl(0, 0%, 18%);
   --popover: hsl(40, 40%, 98%);
   --popover-foreground: hsl(0, 0%, 18%);
-  --primary: hsl(13, 48%, 57%);
+  --primary: hsl(8, 68%, 48%);
   --primary-foreground: hsl(40, 40%, 98%);
   --secondary: hsl(105, 20%, 54%);
   --secondary-foreground: hsl(0, 0%, 18%);
@@ -23,20 +23,20 @@
   --destructive-foreground: hsl(40, 40%, 98%);
   --border: hsl(30, 20%, 88%);
   --input: hsl(30, 20%, 88%);
-  --ring: hsl(13, 48%, 57%);
-  --chart-1: hsl(13, 48%, 57%);
+  --ring: hsl(8, 68%, 48%);
+  --chart-1: hsl(8, 68%, 48%);
   --chart-2: hsl(105, 20%, 54%);
   --chart-3: hsl(38, 42%, 65%);
   --chart-4: hsl(147, 78%, 42%);
   --chart-5: hsl(341, 75%, 51%);
   --sidebar: hsl(40, 35%, 97%);
   --sidebar-foreground: hsl(0, 0%, 18%);
-  --sidebar-primary: hsl(13, 48%, 57%);
+  --sidebar-primary: hsl(8, 68%, 48%);
   --sidebar-primary-foreground: hsl(40, 40%, 98%);
   --sidebar-accent: hsl(38, 42%, 65%);
   --sidebar-accent-foreground: hsl(0, 0%, 18%);
   --sidebar-border: hsl(30, 20%, 88%);
-  --sidebar-ring: hsl(13, 48%, 57%);
+  --sidebar-ring: hsl(8, 68%, 48%);
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -50,7 +50,7 @@
   --card-foreground: hsl(40, 40%, 95%);
   --popover: hsl(0, 0%, 0%);
   --popover-foreground: hsl(40, 40%, 95%);
-  --primary: hsl(13, 48%, 57%);
+  --primary: hsl(8, 68%, 48%);
   --primary-foreground: hsl(40, 40%, 98%);
   --secondary: hsl(105, 20%, 54%);
   --secondary-foreground: hsl(0, 0%, 18%);
@@ -62,7 +62,7 @@
   --destructive-foreground: hsl(40, 40%, 98%);
   --border: hsl(30, 20%, 18%);
   --input: hsl(30, 20%, 18%);
-  --ring: hsl(13, 48%, 57%);
+  --ring: hsl(8, 68%, 48%);
 }
 
 @layer base {
@@ -90,7 +90,7 @@
 
 .editorial-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px hsl(13, 48%, 57%, 0.15);
+  box-shadow: 0 20px 40px -12px hsl(8, 68%, 48%, 0.15);
 }
 
 .stamp-card {
@@ -100,8 +100,8 @@
 }
 
 .stamp-card:hover {
-  border-color: hsl(13, 48%, 57%);
-  box-shadow: 0 8px 24px -4px hsl(13, 48%, 57%, 0.2);
+  border-color: hsl(8, 68%, 48%);
+  box-shadow: 0 8px 24px -4px hsl(8, 68%, 48%, 0.2);
 }
 
 .badge-glow {
@@ -109,8 +109,8 @@
 }
 
 .sidebar-active {
-  background: linear-gradient(90deg, hsl(13, 48%, 57%) 0%, transparent 100%);
-  color: hsl(13, 48%, 57%);
+  background: linear-gradient(90deg, hsl(8, 68%, 48%) 0%, transparent 100%);
+  color: hsl(8, 68%, 48%);
 }
 
 .scrapbook-corner {
@@ -152,7 +152,7 @@
   left: 20%;
   right: 20%;
   bottom: 20%;
-  border: 2px solid hsl(13, 48%, 57%);
+  border: 2px solid hsl(8, 68%, 48%);
   border-radius: 8px;
   z-index: 10;
 }
@@ -163,7 +163,7 @@
   background: linear-gradient(
     45deg,
     transparent 30%,
-    hsl(13, 48%, 57%, 0.1) 50%,
+    hsl(8, 68%, 48%, 0.1) 50%,
     transparent 70%
   );
   animation: scan-line 2s linear infinite;

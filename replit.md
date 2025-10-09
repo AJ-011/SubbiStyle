@@ -43,23 +43,33 @@ Subbi is an ethical fashion-tech platform where users collect digital stamps fro
 - **badges** - Achievement badges with unlock criteria
 - **user_badges** - User's earned badges
 
-## Authentication Requirements
+## Authentication & User Roles
 
-### Public (No Login Required)
-- Homepage browsing
-- Shop catalog (view all garments, filter by category/brand, search)
-- Garment detail pages (Impact, Care, Culture tabs)
-- Brand pages and stories
-- All cultural content and educational materials
+### Two Distinct User Flows
 
-### Login Required
-- Personal passport page (`/passport`)
-- Stamp collection tracking
-- Badge achievements
-- Environmental impact totals
-- NFC/QR code scanning to claim stamps
+**1. Consumer Flow**
+- **Public Access (No Login):**
+  - Homepage browsing
+  - Shop catalog (view all garments, filter by category/brand, search)
+  - Garment detail pages (Impact, Care, Culture tabs)
+  - Brand pages and stories
+  - All cultural content and educational materials
 
-**Integration**: Replit Auth (javascript_log_in_with_replit) for OIDC authentication
+- **Login Required:**
+  - My Passport page (`/my-passport`) - consumer dashboard
+  - Stamp collection tracking
+  - Badge achievements
+  - Environmental impact totals
+  - NFC/QR code scanning to claim stamps
+
+- **Navigation**: Home, Shop, My Passport (in sidebar)
+
+**2. Brand Flow**
+- **Login Required:** Brand users only access their brand dashboard
+- **Navigation**: No consumer-facing pages (no shop, no homepage)
+- **Dashboard**: `/brand-dashboard` - garment onboarding, inventory management
+
+**Integration**: Replit Auth (javascript_log_in_with_replit) for OIDC authentication with role-based routing
 
 ## Data Model
 
@@ -119,8 +129,11 @@ UserPassport: user, stamps[], badges[], totalImpact
 
 ### Theme
 - **Inspiration**: Editorial (Vogue x National Geographic)
-- **Colors**: Soft earth tones, cream backgrounds, sage green accents
-- **Typography**: Clean serif headers, readable sans-serif body
+- **Colors**: 
+  - Primary: Deep reddish-orange/terracotta `hsl(8, 68%, 48%)` for branding, CTAs, and active states
+  - Backgrounds: Soft cream tones
+  - Secondary: Sage green accents
+- **Typography**: Clean serif headers (Playfair Display), readable sans-serif body (Inter)
 - **Visual Elements**: Stamp-inspired cards, passport aesthetic, textile textures
 
 ### Component Library
@@ -139,6 +152,8 @@ UserPassport: user, stamps[], badges[], totalImpact
 - ✅ Added complete cultural content (history, techniques, vocabulary) for all garments
 - ✅ Added supply chain steps for all garments
 - ✅ Documented authentication requirements (public browsing vs login-required passport)
+- ✅ Separated consumer and brand navigation (removed Brand Dashboard from consumer sidebar)
+- ✅ Updated primary color to deeper reddish-orange/terracotta for better branding
 
 ## User Preferences
 - Minimize the number of files (collapse similar components)
