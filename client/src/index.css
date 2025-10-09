@@ -136,7 +136,8 @@
 
 /* Loading states */
 .loading-skeleton {
-  @apply animate-pulse bg-muted/50 rounded;
+  @apply animate-pulse bg-muted rounded;
+  opacity: 0.5;
 }
 
 /* QR Scanner styles */
@@ -196,15 +197,27 @@
 
 /* Button variants */
 .btn-primary {
-  @apply bg-primary hover:bg-primary/90 text-primary-foreground;
+  @apply bg-primary text-primary-foreground transition-opacity;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
 }
 
 .btn-secondary {
-  @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground;
+  @apply bg-secondary text-secondary-foreground transition-opacity;
+}
+
+.btn-secondary:hover {
+  opacity: 0.9;
 }
 
 .btn-accent {
-  @apply bg-accent hover:bg-accent/90 text-accent-foreground;
+  @apply bg-accent text-accent-foreground transition-opacity;
+}
+
+.btn-accent:hover {
+  opacity: 0.9;
 }
 
 .btn-outline {

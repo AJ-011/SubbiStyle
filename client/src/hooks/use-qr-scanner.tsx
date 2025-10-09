@@ -27,7 +27,8 @@ export function useQrScanner({
   const isSupported = !!(
     navigator.mediaDevices &&
     navigator.mediaDevices.getUserMedia &&
-    window.BarcodeDetector
+    typeof window !== 'undefined' &&
+    'BarcodeDetector' in window
   );
 
   const detectQRCode = useCallback(

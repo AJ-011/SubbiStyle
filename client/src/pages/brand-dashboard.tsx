@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { insertGarmentSchema, insertArtisanSchema, insertBrandSchema, insertImpactMetricsSchema, insertCulturalContentSchema, insertCareInstructionsSchema, insertNfcCodeSchema } from "@shared/schema";
+import { insertGarmentSchema, insertArtisanSchema, insertBrandSchema, insertImpactMetricsSchema, insertCulturalContentSchema, insertCareInstructionsSchema, insertNfcCodeSchema, type Brand, type GarmentWithDetails } from "@shared/schema";
 import { z } from "zod";
 
 // Extended form schema for the complete garment onboarding
@@ -51,11 +51,11 @@ export default function BrandDashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: brands = [] } = useQuery({
+  const { data: brands = [] } = useQuery<Brand[]>({
     queryKey: ["/api/brands"],
   });
 
-  const { data: garments = [] } = useQuery({
+  const { data: garments = [] } = useQuery<GarmentWithDetails[]>({
     queryKey: ["/api/garments"],
   });
 
@@ -213,9 +213,9 @@ export default function BrandDashboard() {
     generateCulturalContent({
       garmentName: formData.name,
       origin: formData.origin,
-      craftTechnique: formData.techniques?.[0] || "Traditional craft",
+      craftTechnique: (formData.techniques && formData.techniques.length > 0 ? formData.techniques[0] : "Traditional craft") as string,
       artisanName: formData.artisanName,
-      materials: formData.materials || [],
+      materials: (formData.materials || []) as string[],
     });
   };
 
@@ -343,6 +343,7 @@ export default function BrandDashboard() {
                               rows={3}
                               placeholder="Describe your garment, its cultural significance, and craftsmanship..."
                               {...field}
+                              value={field.value || ''}
                               data-testid="input-description"
                             />
                           </FormControl>

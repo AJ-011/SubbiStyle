@@ -40,7 +40,9 @@ export default function Shop() {
         case "price-high":
           return Number(b.price) - Number(a.price);
         case "newest":
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
         default:
           return 0;
       }

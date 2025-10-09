@@ -64,11 +64,11 @@ export default function StampCard({ stamp, garment }: StampCardProps) {
         
         {/* Unlock Date */}
         <div className="text-xs text-muted-foreground mb-3">
-          Unlocked {new Date(stamp.unlockedAt).toLocaleDateString('en-US', { 
+          Unlocked {stamp.unlockedAt ? new Date(stamp.unlockedAt).toLocaleDateString('en-US', { 
             month: 'short', 
             day: 'numeric',
             year: 'numeric'
-          })}
+          }) : 'Recently'}
         </div>
         
         <Link href={`/passport/${garment.id}`}>

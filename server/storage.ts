@@ -146,7 +146,14 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id, createdAt: new Date() };
+    const user: User = { 
+      ...insertUser, 
+      id, 
+      email: insertUser.email ?? null,
+      profileImage: insertUser.profileImage ?? null,
+      membershipTier: insertUser.membershipTier ?? null,
+      createdAt: new Date() 
+    };
     this.users.set(id, user);
     return user;
   }
@@ -185,7 +192,15 @@ export class MemStorage implements IStorage {
 
   async createBrand(insertBrand: InsertBrand): Promise<Brand> {
     const id = randomUUID();
-    const brand: Brand = { ...insertBrand, id, createdAt: new Date() };
+    const brand: Brand = { 
+      ...insertBrand, 
+      id, 
+      description: insertBrand.description ?? null,
+      website: insertBrand.website ?? null,
+      logo: insertBrand.logo ?? null,
+      isVerified: insertBrand.isVerified ?? null,
+      createdAt: new Date() 
+    };
     this.brands.set(id, brand);
     return brand;
   }
@@ -200,7 +215,16 @@ export class MemStorage implements IStorage {
 
   async createArtisan(insertArtisan: InsertArtisan): Promise<Artisan> {
     const id = randomUUID();
-    const artisan: Artisan = { ...insertArtisan, id, createdAt: new Date() };
+    const artisan: Artisan = { 
+      ...insertArtisan, 
+      id, 
+      bio: insertArtisan.bio ?? null,
+      profileImage: insertArtisan.profileImage ?? null,
+      experience: insertArtisan.experience ?? null,
+      generation: insertArtisan.generation ?? null,
+      isVerified: insertArtisan.isVerified ?? null,
+      createdAt: new Date() 
+    };
     this.artisans.set(id, artisan);
     return artisan;
   }
@@ -231,7 +255,17 @@ export class MemStorage implements IStorage {
 
   async createGarment(insertGarment: InsertGarment): Promise<Garment> {
     const id = randomUUID();
-    const garment: Garment = { ...insertGarment, id, createdAt: new Date() };
+    const garment: Garment = { 
+      ...insertGarment, 
+      id, 
+      description: insertGarment.description ?? null,
+      images: insertGarment.images ?? [],
+      materials: insertGarment.materials ?? [],
+      techniques: insertGarment.techniques ?? [],
+      isActive: insertGarment.isActive ?? null,
+      isVerified: insertGarment.isVerified ?? null,
+      createdAt: new Date() 
+    };
     this.garments.set(id, garment);
     return garment;
   }
@@ -280,21 +314,43 @@ export class MemStorage implements IStorage {
 
   async createNfcCode(insertNfcCode: InsertNfcCode): Promise<NfcCode> {
     const id = randomUUID();
-    const nfcCode: NfcCode = { ...insertNfcCode, id, createdAt: new Date() };
+    const nfcCode: NfcCode = { 
+      ...insertNfcCode, 
+      id, 
+      nfcUid: insertNfcCode.nfcUid ?? null,
+      qrCode: insertNfcCode.qrCode ?? null,
+      isActive: insertNfcCode.isActive ?? null,
+      createdAt: new Date() 
+    };
     this.nfcCodes.set(id, nfcCode);
     return nfcCode;
   }
 
   async createImpactMetrics(insertMetrics: InsertImpactMetrics): Promise<ImpactMetrics> {
     const id = randomUUID();
-    const metrics: ImpactMetrics = { ...insertMetrics, id, createdAt: new Date() };
+    const metrics: ImpactMetrics = { 
+      ...insertMetrics, 
+      id, 
+      waterSaved: insertMetrics.waterSaved ?? null,
+      co2Offset: insertMetrics.co2Offset ?? null,
+      artisansSupported: insertMetrics.artisansSupported ?? null,
+      supplyChainSteps: insertMetrics.supplyChainSteps ?? null,
+      createdAt: new Date() 
+    };
     this.impactMetrics.set(id, metrics);
     return metrics;
   }
 
   async createCulturalContent(insertContent: InsertCulturalContent): Promise<CulturalContent> {
     const id = randomUUID();
-    const content: CulturalContent = { ...insertContent, id, createdAt: new Date() };
+    const content: CulturalContent = { 
+      ...insertContent, 
+      id, 
+      description: insertContent.description ?? null,
+      content: insertContent.content ?? null,
+      isAiGenerated: insertContent.isAiGenerated ?? null,
+      createdAt: new Date() 
+    };
     
     const existing = this.culturalContent.get(content.garmentId) || [];
     existing.push(content);
@@ -309,14 +365,27 @@ export class MemStorage implements IStorage {
 
   async createCareInstructions(insertInstructions: InsertCareInstructions): Promise<CareInstructions> {
     const id = randomUUID();
-    const instructions: CareInstructions = { ...insertInstructions, id, createdAt: new Date() };
+    const instructions: CareInstructions = { 
+      ...insertInstructions, 
+      id, 
+      washingInstructions: insertInstructions.washingInstructions ?? null,
+      dryingInstructions: insertInstructions.dryingInstructions ?? null,
+      storageTips: insertInstructions.storageTips ?? null,
+      repairTips: insertInstructions.repairTips ?? null,
+      createdAt: new Date() 
+    };
     this.careInstructions.set(id, instructions);
     return instructions;
   }
 
   async createStamp(insertStamp: InsertStamp): Promise<Stamp> {
     const id = randomUUID();
-    const stamp: Stamp = { ...insertStamp, id, unlockedAt: new Date() };
+    const stamp: Stamp = { 
+      ...insertStamp, 
+      id, 
+      scanLocation: insertStamp.scanLocation ?? null,
+      unlockedAt: new Date() 
+    };
     
     const userStamps = this.stamps.get(stamp.userId) || [];
     userStamps.push(stamp);
@@ -342,7 +411,12 @@ export class MemStorage implements IStorage {
 
   async createBadge(insertBadge: InsertBadge): Promise<Badge> {
     const id = randomUUID();
-    const badge: Badge = { ...insertBadge, id, createdAt: new Date() };
+    const badge: Badge = { 
+      ...insertBadge, 
+      id, 
+      description: insertBadge.description ?? null,
+      createdAt: new Date() 
+    };
     this.badges.set(id, badge);
     return badge;
   }
@@ -379,7 +453,14 @@ export class MemStorage implements IStorage {
 
   async trackAnalytics(insertAnalytics: InsertAnalytics): Promise<Analytics> {
     const id = randomUUID();
-    const analytics: Analytics = { ...insertAnalytics, id, timestamp: new Date() };
+    const analytics: Analytics = { 
+      ...insertAnalytics, 
+      id, 
+      userId: insertAnalytics.userId ?? null,
+      garmentId: insertAnalytics.garmentId ?? null,
+      metadata: insertAnalytics.metadata ?? null,
+      timestamp: new Date() 
+    };
     
     const garmentAnalytics = this.analytics.get(analytics.garmentId || 'global') || [];
     garmentAnalytics.push(analytics);

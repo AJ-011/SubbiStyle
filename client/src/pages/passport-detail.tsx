@@ -155,7 +155,7 @@ export default function PassportDetail() {
                 </div>
                 <div className="flex items-center gap-3">
                   <i className="fas fa-calendar text-primary w-5"></i>
-                  <span>Crafted: {new Date(garment.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                  <span>Crafted: {garment.createdAt ? new Date(garment.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Unknown'}</span>
                 </div>
               </div>
               

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import StampCard from "@/components/stamp-card";
 import BadgeCard from "@/components/badge-card";
-import type { UserPassport } from "@shared/schema";
+import type { UserPassport, Badge as BadgeType } from "@shared/schema";
 
 export default function MyPassport() {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -18,7 +18,7 @@ export default function MyPassport() {
     queryKey: ["/api/users", userId, "passport"],
   });
 
-  const { data: allBadges = [] } = useQuery({
+  const { data: allBadges = [] } = useQuery<BadgeType[]>({
     queryKey: ["/api/badges"],
   });
 
@@ -111,7 +111,7 @@ export default function MyPassport() {
                   {userPassport.user.name || "Sarah Martinez"}
                 </h2>
                 <p className="text-white/90 mb-2">
-                  Member since {new Date(userPassport.user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  Member since {userPassport.user.createdAt ? new Date(userPassport.user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Recently'}
                 </p>
                 <div className="flex items-center gap-2">
                   <Badge className="bg-white/20 text-white backdrop-blur-sm capitalize">
@@ -184,7 +184,7 @@ export default function MyPassport() {
                   key={badge.id} 
                   badge={badge} 
                   isUnlocked={!!userBadge}
-                  earnedAt={userBadge?.earnedAt}
+                  earnedAt={userBadge?.earnedAt ?? undefined}
                 />
               );
             })}
