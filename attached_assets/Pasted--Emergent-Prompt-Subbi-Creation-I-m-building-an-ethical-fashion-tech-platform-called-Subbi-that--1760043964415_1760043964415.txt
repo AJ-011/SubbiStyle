@@ -1,0 +1,79 @@
+🌿 Emergent Prompt: Subbi Creation
+I’m building an ethical fashion-tech platform called Subbi that bridges culture, sustainability, and technology. Please generate the full MVP setup, UX, and database architecture for a digital garment passport system that uses NFC tags or QR codes to verify authenticity, trace supply chains, and unlock storytelling experiences.
+Core Description:
+Subbi connects global artisans and conscious consumers through garments that each carry a unique stamp that can be unlocked in a digital passport system in app or website. When tapped or scanned, the tag reveals the garment’s origin, craft lineage, environmental footprint, and unlockable mixed-media storytelling (music, recipes, videos, poetry, maps, etc.).
+Key Features to Include:
+	•	Brand Dashboard (B2B): Brands can onboard their collections, upload garment data, artisan stories, media, and impact metrics.
+	•	Consumer Experience (B2C): Each garment’s passport includes three sections — Impact, Care, and Culture.
+	•	Stamps & Badges System: Each garment unlocks collectible stamps that track personal cultural and environmental impact.
+	•	User Accounts: Optional for MVP but should support Google login and membership tiers (Gold/Silver/Platinum).
+	•	Database: Should connect garments, artisans, materials, media, and user interactions (unlocks, stamps, etc.).
+	•	NFC/QR Integration: Simple database entry linking each NFC tag’s UID to its garment passport entry.
+	•	Admin Controls: Verification for artisan and brand authenticity.
+	•	Storytelling AI Integration: Use GPT-5 or another LLM to assist with generating and curating cultural content (craft histories, myths, origin stories).
+	•	UI/UX Style: Elegant, minimal, travel-inspired — like Vogue x National Geographic. Include editorial fonts, stamp visuals, and soft scrapbook-like textures.
+	•	Optional Add-ons:
+	•	Cultural map interface showing artisan regions
+	•	Analytics dashboard for tracking environmental footprint and engagement
+	•	Gamified user passport (Spotify-wrapped-style impact recap)
+Goal: Build a vertically integrated system that can scale into a marketplace for 1,500+ ethical artisan brands. The MVP should include a consumer passport demo and a brand onboarding flow.
+
+USER JOURNEY
+This is the journey for the consumer and brand written out:
+Consumer Journey
+    1    Awareness → Sees Subbi brand online, pop-up, or word of mouth.
+    2    Purchase → Buys garment with NFC-enabled label.
+    3    Onboarding → Scans NFC → garment’s unique digital passport and its stamp open.
+    4    Stamp Unlock → Each garment’s stamp expands into 3 features:
+    ◦    Impact → environmental & artisan livelihood data.
+    ◦    Care → garment washing, folding, preservation tips.
+    ◦    Culture → curated storytelling (recipe, song, vocabulary, myth, beauty secrets, etc).
+    5    Engagement → Collect unique stamps, earn badges.
+    6    Sharing → Post stamp or badge on social media.
+    7    Rewards → Unlocks membership perks (gold/silver/platinum). Potentially also valid for tax rebates
+    8    Retention → Consumer revisits stamps, tracks impact, searches through marketplace, buys again.
+sta
+Brand Journey
+    1    Onboarding with Subbi → Brand uploads garment info, artisan data, impact metrics.
+    2    Verification Step → Subbi (and/or third parties) verify artisan info, sustainability, and supply chain claims.
+    3    NFC / QR Label Encoding → Each garment is encoded with an NFC/QR tag linked directly to its unique passport stamp.
+    4    Passport + Stamp Generation → Subbi platform generates the digital passport and the stamp with 3 features(Impact, Care, Culture).
+    5    Consumer Activation → Brand sees when stamp is unlocked and which features are clicked.
+    6    Analytics Dashboard → Data on consumer interactions:
+    ◦    Which features get the most engagement
+    ◦    Sharing activity
+    ◦    Retention/repurchase loops
+    7    Rewards Delivery → Subbi auto-unlocks perks, tracks memberships.
+    8    Continuous Improvement → Insights guide future drops, storytelling, and reporting.
+
+
+
+
+
+UI FLOW:
+Home page: 
+Spotlight on clickable links (one that is for recent sustainable fashion news story, one that is a stamp preview -could be any of the elements in a stamp, one garment in a collection on our site, a collection)
+A sidebar to navigate to other screens like my passport / shop / about us 
+The shop:
+users can browse through all the garments/brands that have partnered with Subbi (potentially have a brands section and all garments section and we sort/search/filter through popular garments section, or new collections etc)
+Each garment holds a preview of the stamp features (the first paragraph of an article/story, the origin of the garment, the name of the food/beauty recipe, the first few seconds or still of the video)
+My passport:
+A profile section for logged in users to hold all user information (i.e name, shipping addresses, payment methods, purchases, badges earned) 
+Each individual purchase unlocks a stamp. i.e each garment will have a stamp that they will hold:
+Environmental impact (water saved, co2 saved, artisans uplifted)
+Care instructions of the garment
+Cultural digital archive (3-4 curated mixed media elements to reflect the culture of the hands that made the clothes)
+Local myths and legends
+Vocabulary with definitions from the dialect
+Demonstrations of the craft
+History/geography/origin of the crafts
+Traditions 
+Artisan interview
+Local music recording 
+Food recipe
+Badges for milestones (that measure cumulative impact, unlocked when milestones are reached for consumers and brands)
+Ex. cultural archivist : 5+ garment stamps from different communities (celebrates cross culture curiosity)
+Ex. soil saver : 1000+ liters of water saved
+Ex. Natural dye : 5 garments purchased that use natural dye instead of chemical
+Ex. Ancestral ally : supporting 3+ endangered artisan communities 
+Ex. Textile time traveler : (unlocking 5+ weaving techniques)
