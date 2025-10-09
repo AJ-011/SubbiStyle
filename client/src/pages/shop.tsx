@@ -15,7 +15,7 @@ export default function Shop() {
   const [sortBy, setSortBy] = useState("featured");
 
   const { data: garments = [], isLoading } = useQuery<GarmentWithDetails[]>({
-    queryKey: ["/api/garments", { search: searchTerm, category: categoryFilter }],
+    queryKey: ["/api/garments"],
   });
 
   const { data: brands = [] } = useQuery({

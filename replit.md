@@ -3,7 +3,7 @@
 ## Overview
 Subbi is an ethical fashion-tech platform where users collect digital stamps from garment purchases. Each garment has an NFC/QR code that unlocks a stamp on the user's passport, providing access to environmental impact data, care instructions, and cultural archives about the artisan heritage behind the piece.
 
-**Current Status**: MVP implementation with in-memory storage, ready for testing
+**Current Status**: MVP implementation using PostgreSQL database, fully seeded with 5 garments
 **Last Updated**: October 9, 2025
 
 ## Architecture
@@ -19,8 +19,8 @@ Subbi is an ethical fashion-tech platform where users collect digital stamps fro
 - **Components**: NFC/QR scanner, stamp cards, badge displays, filters, search
 
 ### Backend (Express + Node.js)
-- **Stack**: Express, TypeScript, PostgreSQL schema (via Drizzle ORM)
-- **Storage**: In-memory storage (MemStorage) for MVP development
+- **Stack**: Express, TypeScript, PostgreSQL (via Drizzle ORM)
+- **Storage**: DatabaseStorage (server/db-storage.ts) connected to PostgreSQL
 - **API Routes**:
   - `GET /api/garments` - List all garments with optional filters
   - `GET /api/garments/:id` - Get garment details
@@ -93,9 +93,9 @@ UserPassport: user, stamps[], badges[], totalImpact
 - **Production Ready**: PostgreSQL schema defined, ready to switch
 - **Note**: All impact metrics must be stored as numeric strings (e.g., "2500") not formatted text (e.g., "2,500 liters") to enable aggregation
 
-## Seed Data (Development)
+## Seed Data (Production Database)
 
-### Garments (3 items)
+### Garments (5 items)
 1. **Huipil de Flores** - Traditional Guatemalan embroidered blouse
    - Brand: Threads of Heritage
    - Artisan: María Elena Tuyuc (Guatemala)
@@ -113,6 +113,18 @@ UserPassport: user, stamps[], badges[], totalImpact
    - Artisan: Kenji Yamamoto (Japan)
    - Category: Accessories
    - Impact: 1,800L water saved, 8kg CO2 offset, 2 artisans
+
+4. **Lalita Kaftan** - Indian handloom cotton kaftan with block printing
+   - Brand: Pajamasutra
+   - Artisan: Ravi Sharma (India)
+   - Category: Clothing
+   - Impact: 1,200L water saved, 15.6kg CO2 offset, 60 artisans
+
+5. **Sonali Romper** - Modern romper inspired by North Indian salwar with natural indigo
+   - Brand: Pajamasutra
+   - Artisan: Ravi Sharma (India)
+   - Category: Clothing
+   - Impact: 1,000L water saved, 18.75kg CO2 offset, 50 artisans
 
 ### Demo User
 - **Name**: Sarah Martinez (user-1)
@@ -155,6 +167,7 @@ UserPassport: user, stamps[], badges[], totalImpact
 - ✅ Separated consumer and brand navigation (removed Brand Dashboard from consumer sidebar)
 - ✅ Updated primary color to deeper reddish-orange/terracotta for better branding
 - ✅ Changed active navigation state from gradient to solid background with white text
+- ✅ Added brand logo to sidebar and updated tagline to "Fashion with a Conscience"
 
 ## User Preferences
 - Minimize the number of files (collapse similar components)

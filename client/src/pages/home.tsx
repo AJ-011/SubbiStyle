@@ -93,9 +93,11 @@ export default function Home() {
               <div className="stamp-card rounded-xl p-6 mb-4 scrapbook-corner">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                      <i className="fas fa-stamp text-primary text-xl"></i>
-                    </div>
+                    <img 
+                      src="https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=150&h=150&fit=crop" 
+                      alt="Zapotec weaving" 
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
                     <div>
                       <p className="font-semibold">Zapotec Weave</p>
                       <p className="text-xs text-muted-foreground">Origin: Oaxaca, Mexico</p>
@@ -126,7 +128,7 @@ export default function Home() {
                 Experience the 2,500-year-old tradition of Zapotec weaving through stories, recipes, and music from artisan María Elena...
               </p>
               <Button variant="link" className="p-0 text-primary font-medium">
-                Unlock Full Passport <i className="fas fa-unlock text-sm ml-2"></i>
+                Purchase Item to Unlock Stamp <i className="fas fa-unlock text-sm ml-2"></i>
               </Button>
             </CardContent>
           </Card>

@@ -1,5 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
+import logoImg from "@assets/WhatsApp Image 2025-10-09 at 14.39.20_8843d208_1760046561681.jpg";
 
 const navigation = [
   { name: "Home", href: "/", icon: "fas fa-home" },
@@ -13,12 +14,23 @@ export default function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border z-50 flex flex-col shadow-lg">
       <div className="p-6 border-b border-border">
-        <h1 className="font-serif text-3xl font-bold text-primary" data-testid="app-logo">
-          Subbi
-        </h1>
-        <p className="text-xs text-muted-foreground mt-1 tracking-wide">
-          ETHICAL FASHION PASSPORTS
-        </p>
+        <div className="flex items-center gap-3">
+          <img 
+            src={logoImg} 
+            alt="Subbi logo" 
+            className="w-16 h-16 object-contain"
+            style={{ mixBlendMode: 'multiply' }}
+            data-testid="app-logo-image"
+          />
+          <div>
+            <h1 className="font-serif text-3xl font-bold text-primary" data-testid="app-logo">
+              Subbi
+            </h1>
+            <p className="text-xs text-muted-foreground mt-0.5 tracking-wide">
+              FASHION WITH A CONSCIENCE
+            </p>
+          </div>
+        </div>
       </div>
       
       <nav className="flex-1 p-4 space-y-2" data-testid="sidebar-navigation">

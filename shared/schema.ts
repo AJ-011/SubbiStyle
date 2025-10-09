@@ -8,7 +8,7 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   email: varchar("email").unique(),
   name: varchar("name").notNull(),
-  profileImage: text("profile_image"),
+  avatarUrl: text("avatar_url"),
   membershipTier: varchar("membership_tier", { enum: ["silver", "gold", "platinum"] }).default("silver"),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -18,8 +18,11 @@ export const brands = pgTable("brands", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: varchar("name").notNull(),
   description: text("description"),
+  origin: varchar("origin"),
+  philosophy: text("philosophy"),
+  sustainabilityPractices: jsonb("sustainability_practices").$type<string[]>().default([]),
   website: varchar("website"),
-  logo: text("logo"),
+  logoUrl: text("logo_url"),
   isVerified: boolean("is_verified").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -29,11 +32,12 @@ export const artisans = pgTable("artisans", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: varchar("name").notNull(),
   bio: text("bio"),
-  profileImage: text("profile_image"),
-  location: varchar("location").notNull(),
+  photoUrl: text("photo_url"),
+  country: varchar("country").notNull(),
+  region: varchar("region"),
   craft: varchar("craft").notNull(),
-  experience: integer("experience"), // years of experience
-  generation: integer("generation"), // nth generation artisan
+  yearsOfExperience: integer("years_of_experience"),
+  generation: integer("generation"),
   isVerified: boolean("is_verified").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -60,6 +64,7 @@ export const garments = pgTable("garments", {
 export const nfcCodes = pgTable("nfc_codes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   garmentId: varchar("garment_id").references(() => garments.id).notNull(),
+  code: varchar("code").unique().notNull(),
   nfcUid: varchar("nfc_uid").unique(),
   qrCode: varchar("qr_code").unique(),
   isActive: boolean("is_active").default(true),
@@ -87,19 +92,12 @@ export const impactMetrics = pgTable("impact_metrics", {
 export const culturalContent = pgTable("cultural_content", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   garmentId: varchar("garment_id").references(() => garments.id).notNull(),
-  contentType: varchar("content_type", { 
+  type: varchar("type", { 
     enum: ["recipe", "music", "video", "myth", "vocabulary", "technique", "history"] 
   }).notNull(),
   title: varchar("title").notNull(),
-  description: text("description"),
-  content: jsonb("content").$type<{
-    text?: string;
-    mediaUrl?: string;
-    ingredients?: string[];
-    instructions?: string[];
-    vocabulary?: Array<{ word: string; definition: string; }>;
-    [key: string]: any;
-  }>(),
+  content: text("content").notNull(),
+  images: jsonb("images").$type<string[]>().default([]),
   isAiGenerated: boolean("is_ai_generated").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -109,9 +107,9 @@ export const careInstructions = pgTable("care_instructions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   garmentId: varchar("garment_id").references(() => garments.id).notNull(),
   washingInstructions: text("washing_instructions"),
-  dryingInstructions: text("drying_instructions"),
-  storageTips: text("storage_tips"),
-  repairTips: text("repair_tips"),
+  materials: text("materials"),
+  specialCare: text("special_care"),
+  repairGuidance: text("repair_guidance"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -120,6 +118,7 @@ export const stamps = pgTable("stamps", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id").references(() => users.id).notNull(),
   garmentId: varchar("garment_id").references(() => garments.id).notNull(),
+  nfcCodeId: varchar("nfc_code_id").references(() => nfcCodes.id),
   unlockedAt: timestamp("unlocked_at").defaultNow(),
   scanLocation: varchar("scan_location"),
 });
@@ -129,12 +128,10 @@ export const badges = pgTable("badges", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: varchar("name").notNull(),
   description: text("description"),
-  icon: varchar("icon").notNull(),
-  requirement: jsonb("requirement").$type<{
-    type: "stamp_count" | "water_saved" | "communities" | "craft_types" | "natural_dyes";
-    threshold: number;
-    criteria?: string;
-  }>().notNull(),
+  iconUrl: text("icon_url"),
+  requiredStamps: integer("required_stamps"),
+  requiredCountries: integer("required_countries"),
+  rarity: varchar("rarity", { enum: ["common", "rare", "epic", "legendary"] }),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
