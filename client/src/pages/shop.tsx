@@ -29,7 +29,7 @@ export default function Shop() {
         garment.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         garment.origin.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesCategory = !categoryFilter || garment.category === categoryFilter;
+      const matchesCategory = !categoryFilter || categoryFilter === "all" || garment.category === categoryFilter;
       
       return matchesSearch && matchesCategory;
     })
@@ -49,7 +49,7 @@ export default function Shop() {
     });
 
   const categories = [
-    { value: "", label: "All Categories" },
+    { value: "all", label: "All Categories" },
     { value: "clothing", label: "Clothing" },
     { value: "accessories", label: "Accessories" },
     { value: "textiles", label: "Textiles" },
