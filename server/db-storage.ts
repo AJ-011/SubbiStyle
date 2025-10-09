@@ -36,7 +36,7 @@ export class DatabaseStorage {
     const conditions = [];
     
     if (filters?.category) {
-      conditions.push(eq(schema.garments.category, filters.category));
+      conditions.push(eq(schema.garments.category, filters.category as any));
     }
     
     if (filters?.brand) {
@@ -48,7 +48,7 @@ export class DatabaseStorage {
         or(
           like(schema.garments.name, `%${filters.search}%`),
           like(schema.garments.description, `%${filters.search}%`)
-        )
+        )!
       );
     }
 
@@ -86,6 +86,11 @@ export class DatabaseStorage {
           .from(schema.careInstructions)
           .where(eq(schema.careInstructions.garmentId, garment.id));
 
+        const [nfcCode] = await db
+          .select()
+          .from(schema.nfcCodes)
+          .where(eq(schema.nfcCodes.garmentId, garment.id));
+
         return {
           ...garment,
           brand,
@@ -93,6 +98,7 @@ export class DatabaseStorage {
           impactMetrics,
           culturalContent,
           careInstructions,
+          nfcCode: nfcCode || null,
         };
       })
     );
@@ -133,6 +139,11 @@ export class DatabaseStorage {
       .from(schema.careInstructions)
       .where(eq(schema.careInstructions.garmentId, garment.id));
 
+    const [nfcCode] = await db
+      .select()
+      .from(schema.nfcCodes)
+      .where(eq(schema.nfcCodes.garmentId, garment.id));
+
     return {
       ...garment,
       brand,
@@ -140,11 +151,12 @@ export class DatabaseStorage {
       impactMetrics,
       culturalContent,
       careInstructions,
+      nfcCode: nfcCode || null,
     };
   }
 
   async createGarment(data: InsertGarment): Promise<Garment> {
-    const [garment] = await db.insert(schema.garments).values(data).returning();
+    const [garment] = await db.insert(schema.garments).values(data as any).returning();
     return garment;
   }
 
@@ -162,7 +174,7 @@ export class DatabaseStorage {
   }
 
   async createBrand(data: InsertBrand): Promise<Brand> {
-    const [brand] = await db.insert(schema.brands).values(data).returning();
+    const [brand] = await db.insert(schema.brands).values(data as any).returning();
     return brand;
   }
 

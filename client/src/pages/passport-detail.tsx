@@ -277,7 +277,7 @@ export default function PassportDetail() {
                 <h3 className="font-semibold text-lg mb-4">Meet the Artisan</h3>
                 <div className="flex gap-4">
                   <img 
-                    src={garment.artisan.profileImage || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200"} 
+                    src={garment.artisan.photoUrl || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200"} 
                     alt={garment.artisan.name}
                     className="w-24 h-24 rounded-full object-cover"
                   />
@@ -297,49 +297,45 @@ export default function PassportDetail() {
               <h2 className="font-serif text-3xl font-bold mb-6">Garment Care Instructions</h2>
               
               {garment.careInstructions ? (
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-6">
-                    <div className="bg-background/50 rounded-xl p-6 border border-border">
-                      <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                        <i className="fas fa-hands-wash text-primary"></i>
-                        Washing Instructions
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {garment.careInstructions.washingInstructions || "Hand wash with cold water and mild detergent. Avoid harsh chemicals that could damage natural fibers."}
-                      </p>
-                    </div>
-
-                    <div className="bg-background/50 rounded-xl p-6 border border-border">
-                      <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                        <i className="fas fa-wind text-secondary"></i>
-                        Drying Instructions
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {garment.careInstructions.dryingInstructions || "Air dry flat away from direct sunlight to preserve colors and prevent shrinkage."}
-                      </p>
-                    </div>
+                <div className="space-y-6">
+                  <div className="bg-background/50 rounded-xl p-6 border border-border">
+                    <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <i className="fas fa-hands-wash text-primary"></i>
+                      Washing Instructions
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {garment.careInstructions.washingInstructions}
+                    </p>
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="bg-background/50 rounded-xl p-6 border border-border">
-                      <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                        <i className="fas fa-archive text-accent"></i>
-                        Storage Tips
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {garment.careInstructions.storageTips || "Store in a cool, dry place with cedar sachets to prevent moth damage. Fold carefully to maintain shape."}
-                      </p>
-                    </div>
+                  <div className="bg-background/50 rounded-xl p-6 border border-border">
+                    <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <i className="fas fa-leaf text-secondary"></i>
+                      Materials
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {garment.careInstructions.materials}
+                    </p>
+                  </div>
 
-                    <div className="bg-background/50 rounded-xl p-6 border border-border">
-                      <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                        <i className="fas fa-tools text-primary"></i>
-                        Repair Tips
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {garment.careInstructions.repairTips || "For minor repairs, use matching thread and traditional mending techniques. Contact us for major restoration services."}
-                      </p>
-                    </div>
+                  <div className="bg-background/50 rounded-xl p-6 border border-border">
+                    <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <i className="fas fa-heart text-accent"></i>
+                      Special Care
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {garment.careInstructions.specialCare}
+                    </p>
+                  </div>
+
+                  <div className="bg-background/50 rounded-xl p-6 border border-border">
+                    <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <i className="fas fa-tools text-primary"></i>
+                      Repair Guidance
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {garment.careInstructions.repairGuidance}
+                    </p>
                   </div>
                 </div>
               ) : (
@@ -359,9 +355,9 @@ export default function PassportDetail() {
                     <Card key={content.id} className="overflow-hidden">
                       <CardContent className="p-6">
                         <div className="flex items-center gap-2 mb-3">
-                          <i className={`fas fa-${content.contentType === 'recipe' ? 'utensils' : content.contentType === 'music' ? 'music' : content.contentType === 'video' ? 'video' : 'book'} text-primary`}></i>
+                          <i className={`fas fa-${content.type === 'recipe' ? 'utensils' : content.type === 'music' ? 'music' : content.type === 'video' ? 'video' : 'book'} text-primary`}></i>
                           <Badge variant="secondary" className="capitalize">
-                            {content.contentType}
+                            {content.type}
                           </Badge>
                           {content.isAiGenerated && (
                             <Badge variant="outline" className="text-xs">
@@ -370,45 +366,23 @@ export default function PassportDetail() {
                           )}
                         </div>
                         <h3 className="font-serif text-xl font-bold mb-3">{content.title}</h3>
-                        <p className="text-muted-foreground mb-4">{content.description}</p>
                         
                         {content.content && (
                           <div className="bg-background/50 rounded-lg p-4 border border-border">
-                            {content.contentType === 'recipe' && content.content.ingredients && (
-                              <div className="grid md:grid-cols-2 gap-4">
-                                <div>
-                                  <h4 className="font-semibold mb-2">Ingredients:</h4>
-                                  <ul className="text-sm space-y-1">
-                                    {content.content.ingredients.map((ingredient: string, index: number) => (
-                                      <li key={index}>• {ingredient}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                                <div>
-                                  <h4 className="font-semibold mb-2">Instructions:</h4>
-                                  <ol className="text-sm space-y-1">
-                                    {content.content.instructions?.map((instruction: string, index: number) => (
-                                      <li key={index}>{index + 1}. {instruction}</li>
-                                    ))}
-                                  </ol>
-                                </div>
-                              </div>
-                            )}
-                            
-                            {content.contentType === 'vocabulary' && content.content.vocabulary && (
-                              <div className="space-y-3">
-                                {content.content.vocabulary.map((item: any, index: number) => (
-                                  <div key={index} className="border-b border-border/50 pb-2 last:border-b-0">
-                                    <p className="font-semibold">{item.word}</p>
-                                    <p className="text-sm text-muted-foreground">{item.definition}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            
-                            {content.content.text && (
-                              <p className="text-sm whitespace-pre-line">{content.content.text}</p>
-                            )}
+                            <p className="text-sm leading-relaxed whitespace-pre-line">{content.content}</p>
+                          </div>
+                        )}
+                        
+                        {content.images && content.images.length > 0 && (
+                          <div className="mt-4 grid grid-cols-2 gap-3">
+                            {content.images.map((image, index) => (
+                              <img 
+                                key={index}
+                                src={image} 
+                                alt={`${content.title} - ${index + 1}`}
+                                className="w-full h-48 object-cover rounded-lg"
+                              />
+                            ))}
                           </div>
                         )}
                       </CardContent>
