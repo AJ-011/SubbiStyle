@@ -21,19 +21,14 @@ export default function BadgeCard({ badge, isUnlocked, earnedAt }: BadgeCardProp
     return iconMap[iconName] || 'fas fa-star';
   };
 
-  const getRequirementText = (requirement: any) => {
-    switch (requirement.type) {
-      case 'communities':
-        return `${requirement.threshold}+ communities explored`;
-      case 'water_saved':
-        return `${requirement.threshold}+ liters water saved`;
-      case 'natural_dyes':
-        return `${requirement.threshold}+ natural dye garments`;
-      case 'craft_types':
-        return `${requirement.threshold}+ different crafts`;
-      default:
-        return `${requirement.threshold} milestone reached`;
+  const getRequirementText = () => {
+    if (badge.requiredStamps) {
+      return `Collect ${badge.requiredStamps} stamp${badge.requiredStamps > 1 ? 's' : ''}`;
     }
+    if (badge.requiredCountries) {
+      return `Explore ${badge.requiredCountries} countr${badge.requiredCountries > 1 ? 'ies' : 'y'}`;
+    }
+    return 'Complete special achievement';
   };
 
   return (
@@ -60,7 +55,7 @@ export default function BadgeCard({ badge, isUnlocked, earnedAt }: BadgeCardProp
           </h3>
           
           <p className="text-xs text-muted-foreground mb-2">
-            {getRequirementText(badge.requirement)}
+            {getRequirementText()}
           </p>
           
           <Badge 
