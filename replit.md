@@ -154,6 +154,7 @@ UserPassport: user, stamps[], badges[], totalImpact
 - ✅ Documented authentication requirements (public browsing vs login-required passport)
 - ✅ Separated consumer and brand navigation (removed Brand Dashboard from consumer sidebar)
 - ✅ Updated primary color to deeper reddish-orange/terracotta for better branding
+- ✅ Changed active navigation state from gradient to solid background with white text
 
 ## User Preferences
 - Minimize the number of files (collapse similar components)

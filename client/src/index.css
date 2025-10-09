@@ -109,8 +109,8 @@
 }
 
 .sidebar-active {
-  background: linear-gradient(90deg, hsl(8, 68%, 48%) 0%, transparent 100%);
-  color: hsl(8, 68%, 48%);
+  background: hsl(8, 68%, 58%);
+  color: white;
 }
 
 .scrapbook-corner {
