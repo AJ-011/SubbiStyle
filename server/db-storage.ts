@@ -1,6 +1,8 @@
 import { eq, and, like, or, sql } from "drizzle-orm";
 import { db } from "./db";
 import * as schema from "@shared/schema";
+
+console.log("[startup][db-storage] Module loaded");
 import type {
   Garment,
   Brand,
@@ -13,15 +15,21 @@ import type {
   Badge,
   UserBadge,
   User,
+  Analytics,
   InsertGarment,
   InsertBrand,
   InsertArtisan,
   InsertStamp,
+  InsertAnalytics,
   GarmentWithDetails,
   UserPassport,
 } from "@shared/schema";
 
 export class DatabaseStorage {
+  constructor() {
+    console.log("[startup][db-storage] DatabaseStorage instantiated");
+  }
+
   // Garment methods
   async getAllGarments(filters?: {
     category?: string;
@@ -314,11 +322,21 @@ export class DatabaseStorage {
     return db.select().from(schema.badges);
   }
 
-  // Analytics methods (placeholder for now)
-  async trackAnalytics(data: any): Promise<void> {
-    // TODO: Implement analytics tracking
-    console.log("Analytics tracked:", data);
+  // Analytics methods
+  async trackAnalytics(data: schema.InsertAnalytics): Promise<Analytics> {
+    const [analytics] = await db
+      .insert(schema.analytics)
+      .values({
+        ...data,
+        userId: data.userId ?? null,
+        garmentId: data.garmentId ?? null,
+        metadata: data.metadata ?? null,
+      })
+      .returning();
+
+    return analytics;
   }
 }
 
 export const dbStorage = new DatabaseStorage();
+console.log("[startup][db-storage] Ready");

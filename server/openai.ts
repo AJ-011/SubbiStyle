@@ -1,8 +1,17 @@
 import OpenAI from "openai";
+console.log("[startup][openai] Module loaded");
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key" 
+const resolvedApiKey =
+  process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key";
+if (resolvedApiKey === "default_key") {
+  console.log("[startup][openai] No API key supplied; using placeholder key");
+} else {
+  console.log("[startup][openai] API key detected (length hidden)");
+}
+
+const openai = new OpenAI({
+  apiKey: resolvedApiKey,
 });
 
 export interface CulturalStoryPrompt {

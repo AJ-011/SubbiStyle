@@ -1,8 +1,9 @@
+import "dotenv/config";
 import { db } from "./db";
 import * as schema from "@shared/schema";
 
 async function seed() {
-  console.log("🌱 Seeding database...");
+  console.log("Seeding database...");
 
   // Seed brands
   const brands = await db.insert(schema.brands).values([
@@ -414,7 +415,7 @@ async function seed() {
   ]).returning();
   console.log(`✓ Created ${userBadges.length} user badges`);
 
-  console.log("✅ Database seeding complete!");
+  console.log("Database seeding complete!");
 }
 
 seed()
@@ -423,6 +424,6 @@ seed()
     process.exit(0);
   })
   .catch((error) => {
-    console.error("❌ Seeding failed:", error);
+    console.error("Seeding failed:", error);
     process.exit(1);
   });

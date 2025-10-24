@@ -12,6 +12,8 @@ import {
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
+console.log("[startup][storage] Module loaded");
+
 export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
@@ -871,4 +873,5 @@ export class MemStorage implements IStorage {
 import { dbStorage } from "./db-storage";
 
 // Use database storage instead of in-memory storage
-export const storage: IStorage = dbStorage as any;
+console.log("[startup][storage] Using database storage backend");
+export const storage: IStorage = dbStorage;

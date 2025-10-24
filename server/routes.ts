@@ -10,6 +10,7 @@ import {
 import { randomUUID } from "crypto";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  console.log("[startup][routes] Registering HTTP routes");
   // Garment routes
   app.get("/api/garments", async (req, res) => {
     try {
