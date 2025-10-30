@@ -6,9 +6,10 @@ import type { GarmentWithDetails } from "@shared/schema";
 
 interface GarmentCardProps {
   garment: GarmentWithDetails;
+  purchased?: boolean;
 }
 
-export default function GarmentCard({ garment }: GarmentCardProps) {
+export default function GarmentCard({ garment, purchased }: GarmentCardProps) {
   return (
     <Link href={`/passport/${garment.id}`}>
       <Card 
@@ -21,10 +22,10 @@ export default function GarmentCard({ garment }: GarmentCardProps) {
             alt={garment.name}
             className="w-full h-80 object-cover"
           />
-          {garment.isVerified && (
+          {purchased && (
             <div className="absolute top-3 right-3">
-              <Badge className="bg-secondary text-secondary-foreground">
-                Verified
+              <Badge className="bg-primary text-primary-foreground">
+                Purchased
               </Badge>
             </div>
           )}

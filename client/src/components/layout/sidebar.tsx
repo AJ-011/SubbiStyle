@@ -33,7 +33,7 @@ export default function Sidebar() {
         </div>
       </div>
       
-      <nav className="flex-1 p-4 space-y-2" data-testid="sidebar-navigation">
+      <nav className="p-4 space-y-2" data-testid="sidebar-navigation">
         {navigation.map((item) => {
           const isActive = location === item.href;
           return (
@@ -54,18 +54,34 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      
-      <div className="p-4 border-t border-border">
-        <button 
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
-          data-testid="button-sign-in"
-        >
-          <i className="fas fa-sign-in-alt"></i>
-          Sign In
-        </button>
-        <p className="text-xs text-center text-muted-foreground mt-3">
-          Join the cultural movement
-        </p>
+
+      <div className="mt-auto">
+        <div className="p-4 border-t border-border/60">
+          <Link
+            href="/brand-dashboard"
+            className={cn(
+              "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all sidebar-link",
+              location === "/brand-dashboard" ? "sidebar-active" : "hover:bg-muted/20"
+            )}
+            data-testid="nav-link-brand-dashboard"
+          >
+            <i className="fas fa-chart-line w-5"></i>
+            <span>Subbi for Brands</span>
+          </Link>
+        </div>
+        
+        <div className="p-4 border-t border-border">
+          <button
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+            data-testid="button-sign-in"
+          >
+            <i className="fas fa-sign-in-alt"></i>
+            Sign In
+          </button>
+          <p className="text-xs text-center text-muted-foreground mt-3">
+            Join the cultural movement
+          </p>
+        </div>
       </div>
     </aside>
   );

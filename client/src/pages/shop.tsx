@@ -2,25 +2,30 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import GarmentCard from "@/components/garment-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { GarmentWithDetails } from "@shared/schema";
+import type { GarmentWithDetails, UserPassport } from "@shared/schema";
 
 export default function Shop() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [sortBy, setSortBy] = useState("featured");
 
+  const userId = "user-1";
+
   const { data: garments = [], isLoading } = useQuery<GarmentWithDetails[]>({
     queryKey: ["/api/garments"],
   });
 
-  const { data: brands = [] } = useQuery({
-    queryKey: ["/api/brands"],
+  const { data: userPassport } = useQuery<UserPassport>({
+    queryKey: ["/api/users", userId, "passport"],
   });
+
+  const purchasedGarmentIds = new Set(
+    userPassport?.stamps.map((stamp) => stamp.garment.id) ?? [],
+  );
 
   const filteredAndSortedGarments = garments
     .filter(garment => {
@@ -186,7 +191,11 @@ export default function Shop() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-testid="garments-grid">
             {filteredAndSortedGarments.map((garment) => (
-              <GarmentCard key={garment.id} garment={garment} />
+              <GarmentCard
+                key={garment.id}
+                garment={garment}
+                purchased={purchasedGarmentIds.has(garment.id)}
+              />
             ))}
           </div>
         )}
