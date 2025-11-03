@@ -9,7 +9,7 @@ interface BadgeCardProps {
 }
 
 export default function BadgeCard({ badge, isUnlocked, earnedAt }: BadgeCardProps) {
-  const getIconClass = (iconName: string) => {
+  const getIconClass = (iconName?: string | null) => {
     const iconMap: { [key: string]: string } = {
       'book-reader': 'fas fa-book-reader',
       'tint': 'fas fa-tint',
@@ -18,7 +18,10 @@ export default function BadgeCard({ badge, isUnlocked, earnedAt }: BadgeCardProp
       'palette': 'fas fa-palette',
       'crown': 'fas fa-crown',
     };
-    return iconMap[iconName] || 'fas fa-star';
+    if (!iconName) {
+      return 'fas fa-star';
+    }
+    return iconMap[iconName] || iconName;
   };
 
   const getRequirementText = () => {
@@ -45,7 +48,7 @@ export default function BadgeCard({ badge, isUnlocked, earnedAt }: BadgeCardProp
               ? 'bg-gradient-to-br from-accent to-primary' 
               : 'bg-muted/30'
           }`}>
-            <i className={`${getIconClass(badge.icon)} ${
+            <i className={`${getIconClass(badge.iconUrl)} ${
               isUnlocked ? 'text-white text-3xl' : 'text-muted text-2xl'
             }`}></i>
           </div>

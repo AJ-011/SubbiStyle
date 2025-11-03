@@ -122,7 +122,7 @@ app.use((req, res, next) => {
     currentPort += 1;
   }
 
-  const listenOptions: ListenOptions = {
+  const listenOptions: ListenOptions & { reusePort?: boolean } = {
     port: currentPort,
     host: "0.0.0.0",
   };

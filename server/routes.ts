@@ -66,7 +66,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.trackAnalytics({
         garmentId: garment.id,
         action: "scan",
-        metadata: { scanType: "nfc", nfcUid: uid },
+        metadata: { scanType: "nfc", nfcUid: uid } as any,
       });
 
       res.json(garment);
@@ -89,7 +89,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.trackAnalytics({
         garmentId: garment.id,
         action: "scan",
-        metadata: { scanType: "qr", qrCode: code },
+        metadata: { scanType: "qr", qrCode: code } as any,
       });
 
       res.json(garment);
@@ -122,7 +122,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId: stamp.userId,
         garmentId: stamp.garmentId,
         action: "view_passport",
-        metadata: { stampId: stamp.id },
+        metadata: { stampId: stamp.id } as any,
       });
 
       res.status(201).json(stamp);

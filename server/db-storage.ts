@@ -15,12 +15,20 @@ import type {
   Badge,
   UserBadge,
   User,
+  PassportUnlock,
   Analytics,
   InsertGarment,
   InsertBrand,
   InsertArtisan,
   InsertStamp,
   InsertAnalytics,
+  InsertUser,
+  InsertNfcCode,
+  InsertImpactMetrics,
+  InsertCulturalContent,
+  InsertCareInstructions,
+  InsertBadge,
+  InsertPassportUnlock,
   GarmentWithDetails,
   UserPassport,
 } from "@shared/schema";
@@ -28,6 +36,20 @@ import type {
 export class DatabaseStorage {
   constructor() {
     console.log("[startup][db-storage] DatabaseStorage instantiated");
+  }
+
+  // User methods
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.id, id));
+    return user;
+  }
+
+  async createUser(data: InsertUser): Promise<User> {
+    const [user] = await db.insert(schema.users).values(data as any).returning();
+    return user;
   }
 
   // Garment methods
@@ -114,13 +136,13 @@ export class DatabaseStorage {
     return garmentDetails;
   }
 
-  async getGarment(id: string): Promise<GarmentWithDetails | null> {
+  async getGarment(id: string): Promise<GarmentWithDetails | undefined> {
     const [garment] = await db
       .select()
       .from(schema.garments)
       .where(eq(schema.garments.id, id));
 
-    if (!garment) return null;
+    if (!garment) return undefined;
 
     const [brand] = await db
       .select()
@@ -173,12 +195,12 @@ export class DatabaseStorage {
     return db.select().from(schema.brands);
   }
 
-  async getBrand(id: string): Promise<Brand | null> {
+  async getBrand(id: string): Promise<Brand | undefined> {
     const [brand] = await db
       .select()
       .from(schema.brands)
       .where(eq(schema.brands.id, id));
-    return brand || null;
+    return brand ?? undefined;
   }
 
   async createBrand(data: InsertBrand): Promise<Brand> {
@@ -191,12 +213,12 @@ export class DatabaseStorage {
     return db.select().from(schema.artisans);
   }
 
-  async getArtisan(id: string): Promise<Artisan | null> {
+  async getArtisan(id: string): Promise<Artisan | undefined> {
     const [artisan] = await db
       .select()
       .from(schema.artisans)
       .where(eq(schema.artisans.id, id));
-    return artisan || null;
+    return artisan ?? undefined;
   }
 
   async createArtisan(data: InsertArtisan): Promise<Artisan> {
@@ -205,24 +227,29 @@ export class DatabaseStorage {
   }
 
   // NFC/QR Code methods
-  async getGarmentByNfc(uid: string): Promise<GarmentWithDetails | null> {
+  async getGarmentByNfc(uid: string): Promise<GarmentWithDetails | undefined> {
     const [nfcCode] = await db
       .select()
       .from(schema.nfcCodes)
       .where(eq(schema.nfcCodes.nfcUid, uid));
 
-    if (!nfcCode) return null;
+    if (!nfcCode) return undefined;
     return this.getGarment(nfcCode.garmentId);
   }
 
-  async getGarmentByQr(code: string): Promise<GarmentWithDetails | null> {
+  async getGarmentByQr(code: string): Promise<GarmentWithDetails | undefined> {
     const [nfcCode] = await db
       .select()
       .from(schema.nfcCodes)
       .where(eq(schema.nfcCodes.qrCode, code));
 
-    if (!nfcCode) return null;
+    if (!nfcCode) return undefined;
     return this.getGarment(nfcCode.garmentId);
+  }
+
+  async createNfcCode(data: InsertNfcCode): Promise<NfcCode> {
+    const [record] = await db.insert(schema.nfcCodes).values(data as any).returning();
+    return record;
   }
 
   async validateNfcCode(code: string): Promise<{ valid: boolean; garmentId?: string }> {
@@ -239,7 +266,72 @@ export class DatabaseStorage {
       : { valid: false };
   }
 
+  // Impact & auxiliary data
+  async createImpactMetrics(data: InsertImpactMetrics): Promise<ImpactMetrics> {
+    const [record] = await db
+      .insert(schema.impactMetrics)
+      .values(data as any)
+      .returning();
+    return record;
+  }
+
+  async createCulturalContent(
+    data: InsertCulturalContent,
+  ): Promise<CulturalContent> {
+    const [record] = await db
+      .insert(schema.culturalContent)
+      .values(data as any)
+      .returning();
+    return record;
+  }
+
+  async getCulturalContentByGarment(
+    garmentId: string,
+  ): Promise<CulturalContent[]> {
+    return db
+      .select()
+      .from(schema.culturalContent)
+      .where(eq(schema.culturalContent.garmentId, garmentId));
+  }
+
+  async createCareInstructions(
+    data: InsertCareInstructions,
+  ): Promise<CareInstructions> {
+    const [record] = await db
+      .insert(schema.careInstructions)
+      .values(data as any)
+      .returning();
+    return record;
+  }
+
   // User Passport methods
+  async getUserStamps(
+    userId: string,
+  ): Promise<Array<Stamp & { garment: GarmentWithDetails }>> {
+    const userStamps = await db
+      .select()
+      .from(schema.stamps)
+      .where(eq(schema.stamps.userId, userId));
+
+    const enriched = await Promise.all(
+      userStamps.map(async (stamp) => {
+        const garment = await this.getGarment(stamp.garmentId);
+        if (!garment) {
+          return null;
+        }
+        return {
+          ...stamp,
+          garment,
+        };
+      }),
+    );
+
+    return enriched.filter(
+      (entry): entry is Stamp & { garment: GarmentWithDetails } =>
+        entry !== null,
+    );
+  }
+
   async getUserPassport(userId: string): Promise<UserPassport> {
     const [user] = await db
       .select()
@@ -322,8 +414,50 @@ export class DatabaseStorage {
     return db.select().from(schema.badges);
   }
 
+  async createBadge(data: InsertBadge): Promise<Badge> {
+    const [badge] = await db
+      .insert(schema.badges)
+      .values(data as any)
+      .returning();
+    return badge;
+  }
+
+  async awardBadge(userId: string, badgeId: string): Promise<UserBadge> {
+    const [userBadge] = await db
+      .insert(schema.userBadges)
+      .values({ userId, badgeId } as any)
+      .returning();
+    return userBadge;
+  }
+
+  async getUserBadges(
+    userId: string,
+  ): Promise<Array<UserBadge & { badge: Badge }>> {
+    const entries = await db
+      .select()
+      .from(schema.userBadges)
+      .where(eq(schema.userBadges.userId, userId));
+
+    const enriched = await Promise.all(
+      entries.map(async (entry) => {
+        const [badge] = await db
+          .select()
+          .from(schema.badges)
+          .where(eq(schema.badges.id, entry.badgeId));
+        return {
+          ...entry,
+          badge,
+        };
+      }),
+    );
+
+    return enriched.filter(
+      (entry): entry is UserBadge & { badge: Badge } => Boolean(entry.badge),
+    );
+  }
+
   // Analytics methods
-  async trackAnalytics(data: schema.InsertAnalytics): Promise<Analytics> {
+  async trackAnalytics(data: InsertAnalytics): Promise<Analytics> {
     const [analytics] = await db
       .insert(schema.analytics)
       .values({
@@ -336,7 +470,25 @@ export class DatabaseStorage {
 
     return analytics;
   }
+
+  async getGarmentAnalytics(garmentId: string): Promise<Analytics[]> {
+    return db
+      .select()
+      .from(schema.analytics)
+      .where(eq(schema.analytics.garmentId, garmentId));
+  }
+
+  async createPassportUnlock(
+    data: InsertPassportUnlock,
+  ): Promise<PassportUnlock> {
+    const [unlock] = await db
+      .insert(schema.passportUnlocks)
+      .values(data as any)
+      .returning();
+    return unlock;
+  }
 }
 
 export const dbStorage = new DatabaseStorage();
 console.log("[startup][db-storage] Ready");
+

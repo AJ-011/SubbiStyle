@@ -24,12 +24,12 @@ export function useQrScanner({
   } | null>(null);
 
   // Check if browser supports required APIs
-  const isSupported = !!(
-    navigator.mediaDevices &&
-    navigator.mediaDevices.getUserMedia &&
+  const isSupported =
     typeof window !== 'undefined' &&
-    'BarcodeDetector' in window
-  );
+    typeof navigator !== 'undefined' &&
+    !!navigator.mediaDevices &&
+    'getUserMedia' in navigator.mediaDevices &&
+    'BarcodeDetector' in window;
 
   const detectQRCode = useCallback(
     async (video: HTMLVideoElement) => {

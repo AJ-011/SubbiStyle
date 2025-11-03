@@ -1,0 +1,74 @@
+*** Begin Patch
+*** Update File: client/src/pages/my-passport.tsx
+@@
+-const originToIsoMap: Record<string, string> = {
+-  Guatemala: "GTM",
+-  Morocco: "MAR",
+-  India: "IND",
+-  Japan: "JPN",
+-  Peru: "PER",
+-  Mexico: "MEX",
+-  "United States": "USA",
+-  USA: "USA",
+-  Canada: "CAN",
+-  "United Kingdom": "GBR",
+-  "South Korea": "KOR",
+-  "North Korea": "PRK",
+-  "CA'te d'Ivoire": "CIV",
+-  "Ivory Coast": "CIV",
+-  "Cape Verde": "CPV",
+-  "Cabo Verde": "CPV",
+-  "Democratic Republic of the Congo": "COD",
+-  "Republic of the Congo": "COG",
+-  Myanmar: "MMR",
+-  "Lao PDR": "LAO",
+-  Laos: "LAO",
+-  Syria: "SYR",
+-  Venezuela: "VEN",
+-};
++const originIsoMappings: Array<[string, string]> = [
++  ["Guatemala", "GTM"],
++  ["Morocco", "MAR"],
++  ["India", "IND"],
++  ["Japan", "JPN"],
++  ["Peru", "PER"],
++  ["Mexico", "MEX"],
++  ["United States", "USA"],
++  ["USA", "USA"],
++  ["Canada", "CAN"],
++  ["United Kingdom", "GBR"],
++  ["South Korea", "KOR"],
++  ["Republic of Korea", "KOR"],
++  ["North Korea", "PRK"],
++  ["Democratic People's Republic of Korea", "PRK"],
++  ["Cote d'Ivoire", "CIV"],
++  ["Côte d'Ivoire", "CIV"],
++  ["Ivory Coast", "CIV"],
++  ["Cape Verde", "CPV"],
++  ["Cabo Verde", "CPV"],
++  ["Democratic Republic of the Congo", "COD"],
++  ["Republic of the Congo", "COG"],
++  ["Myanmar", "MMR"],
++  ["Lao PDR", "LAO"],
++  ["Laos", "LAO"],
++  ["Syrian Arab Republic", "SYR"],
++  ["Syria", "SYR"],
++  ["Venezuela", "VEN"],
++  ["Bolivarian Republic of Venezuela", "VEN"],
++];
++
++const normalizeCountryKey = (value: string) =>
++  value
++    .normalize("NFD")
++    .replace(/[\u0300-\u036f]/g, "")
++    .replace(/[^a-z]/gi, "")
++    .toLowerCase();
++
++const isoByNormalizedName = originIsoMappings.reduce<Record<string, string>>(
++  (acc, [name, iso]) => {
++    acc[normalizeCountryKey(name)] = iso.toUpperCase();
++    return acc;
++  },
++  {},
++);
+*** End Patch
