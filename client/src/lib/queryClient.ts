@@ -44,7 +44,6 @@ export const getQueryFn: <T>(options: {
   async ({ queryKey }) => {
     try {
       const url = queryKey.join("/") as string;
-      console.log("Fetching:", url);
 
       // Try to get session, but don't let it block the request
       let session = null;
@@ -57,7 +56,7 @@ export const getQueryFn: <T>(options: {
         ]) as any;
         session = sessionResult?.data?.session;
       } catch (sessionError) {
-        console.warn("Session fetch failed, continuing without auth:", sessionError);
+        // Session fetch failed, continue without auth
       }
 
       const headers: Record<string, string> = {};
@@ -75,11 +74,9 @@ export const getQueryFn: <T>(options: {
       }
 
       await throwIfResNotOk(res);
-      const data = await res.json();
-      console.log("Successfully fetched:", url, "- items:", Array.isArray(data) ? data.length : "1");
-      return data;
+      return await res.json();
     } catch (error) {
-      console.error("Query error for", queryKey.join("/"), ":", error);
+      console.error("Query error:", error);
       throw error;
     }
   };

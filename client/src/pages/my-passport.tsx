@@ -66,8 +66,6 @@ export default function MyPassport() {
   const [, navigate] = useLocation();
   const userId = user?.id;
 
-  console.log("MyPassport - authLoading:", authLoading, "user:", user?.id, "userId:", userId);
-
   const { data: userPassport, isLoading } = useQuery<UserPassport | null>({
     queryKey: ["/api/users", userId, "passport"],
     enabled: !!userId,
@@ -76,8 +74,6 @@ export default function MyPassport() {
   const { data: allBadges = [] } = useQuery<BadgeType[]>({
     queryKey: ["/api/badges"],
   });
-
-  console.log("MyPassport - isLoading:", isLoading, "userPassport:", userPassport);
 
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
 

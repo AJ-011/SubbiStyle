@@ -60,17 +60,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const loadUser = useCallback(async () => {
-    console.log("AuthContext: Starting to load user...");
     setLoading(true);
     try {
       const current = await fetchCurrentUser();
-      console.log("AuthContext: User loaded:", current?.id || "null");
       setUser(current);
     } catch (error) {
       console.error("AuthContext: Error loading user:", error);
       setUser(null);
     } finally {
-      console.log("AuthContext: Finished loading, setting loading=false");
       setLoading(false);
     }
   }, []);
