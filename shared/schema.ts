@@ -9,6 +9,7 @@ export const users = pgTable("users", {
   email: varchar("email").unique(),
   name: varchar("name").notNull(),
   avatarUrl: text("avatar_url"),
+  role: varchar("role", { enum: ["shopper", "brand"] }).notNull().default("shopper"),
   membershipTier: varchar("membership_tier", { enum: ["silver", "gold", "platinum"] }).default("silver"),
   createdAt: timestamp("created_at").defaultNow(),
 });

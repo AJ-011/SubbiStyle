@@ -1,5 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -60,17 +62,22 @@ const isoByNormalizedName = originIsoMappings.reduce<Record<string, string>>(
 
 export default function MyPassport() {
   const [activeFilter, setActiveFilter] = useState("all");
+  const { user, loading: authLoading } = useAuth();
+  const [, navigate] = useLocation();
+  const userId = user?.id;
 
-  // TODO: Get actual user ID from auth context
-  const userId = "user-1";
+  console.log("MyPassport - authLoading:", authLoading, "user:", user?.id, "userId:", userId);
 
-  const { data: userPassport, isLoading } = useQuery<UserPassport>({
+  const { data: userPassport, isLoading } = useQuery<UserPassport | null>({
     queryKey: ["/api/users", userId, "passport"],
+    enabled: !!userId,
   });
 
   const { data: allBadges = [] } = useQuery<BadgeType[]>({
     queryKey: ["/api/badges"],
   });
+
+  console.log("MyPassport - isLoading:", isLoading, "userPassport:", userPassport);
 
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
 
@@ -112,13 +119,40 @@ export default function MyPassport() {
     };
   }, [userPassport]);
 
+  if (!authLoading && !user) {
+    return (
+      <div className="min-h-screen p-8 bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <i className="fas fa-passport text-6xl text-muted-foreground"></i>
+          <h2 className="font-serif text-3xl font-bold">Sign in to view your cultural passport</h2>
+          <p className="text-muted-foreground">Create an account or log in to track your purchases and unlock digital stamps.</p>
+          <Button onClick={() => navigate('/auth')} data-testid="button-authenticate">Log In / Sign Up</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authLoading && user && user.role !== "shopper") {
+    return (
+      <div className="min-h-screen p-8 bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <i className="fas fa-user-shield text-6xl text-muted-foreground"></i>
+          <h2 className="font-serif text-3xl font-bold">Shopper account required</h2>
+          <p className="text-muted-foreground">Switch to a shopper profile to view passport details, or continue to manage your brand dashboard.</p>
+          <Button variant="outline" onClick={() => navigate('/brand-dashboard')}>Go to Brand Dashboard</Button>
+        </div>
+      </div>
+    );
+  }
+
   const filterOptions = [
     { value: "all", label: "All Stamps" },
     { value: "region", label: "By Region" },
     { value: "craft", label: "By Craft" },
   ];
 
-  if (isLoading) {
+  // Only show loading if auth is loading, or if we're loading passport data for a logged-in user
+  if (authLoading || (userId && isLoading)) {
     return (
       <div className="min-h-screen p-8 bg-background">
         <div className="max-w-7xl mx-auto">

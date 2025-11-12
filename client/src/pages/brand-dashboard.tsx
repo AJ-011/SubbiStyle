@@ -1,3 +1,5 @@
+import { useAuth } from "@/context/AuthContext";
+import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -47,6 +49,8 @@ const garmentFormSchema = insertGarmentSchema.extend({
 type GarmentFormData = z.infer<typeof garmentFormSchema>;
 
 export default function BrandDashboard() {
+  const { user, loading } = useAuth();
+  const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("onboarding");
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -58,6 +62,32 @@ export default function BrandDashboard() {
   const { data: garments = [] } = useQuery<GarmentWithDetails[]>({
     queryKey: ["/api/garments"],
   });
+
+  if (!loading && !user) {
+    return (
+      <div className="min-h-screen p-8 bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <i className="fas fa-user-tie text-6xl text-muted-foreground"></i>
+          <h2 className="font-serif text-3xl font-bold">Log in to manage your brand</h2>
+          <p className="text-muted-foreground">Brand partners can access dashboards after signing in.</p>
+          <Button onClick={() => navigate('/auth')}>Sign In</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!loading && user && user.role !== 'brand') {
+    return (
+      <div className="min-h-screen p-8 bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <i className="fas fa-store-alt text-6xl text-muted-foreground"></i>
+          <h2 className="font-serif text-3xl font-bold">Brand access required</h2>
+          <p className="text-muted-foreground">Switch to a brand account or contact support to become a partner.</p>
+          <Button variant="outline" onClick={() => navigate('/')}>Return Home</Button>
+        </div>
+      </div>
+    );
+  }
 
   const form = useForm<GarmentFormData>({
     resolver: zodResolver(garmentFormSchema),

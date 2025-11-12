@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,15 +13,15 @@ export default function Shop() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [sortBy, setSortBy] = useState("featured");
-
-  const userId = "user-1";
+  const { user } = useAuth();
 
   const { data: garments = [], isLoading } = useQuery<GarmentWithDetails[]>({
     queryKey: ["/api/garments"],
   });
 
-  const { data: userPassport } = useQuery<UserPassport>({
-    queryKey: ["/api/users", userId, "passport"],
+  const { data: userPassport } = useQuery<UserPassport | null>({
+    queryKey: ["/api/users", user?.id, "passport"],
+    enabled: !!user?.id,
   });
 
   const purchasedGarmentIds = new Set(

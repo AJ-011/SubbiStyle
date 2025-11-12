@@ -367,8 +367,17 @@ async function seed() {
       id: "user-1",
       email: "sarah.martinez@example.com",
       name: "Sarah Martinez",
+      role: "shopper",
       membershipTier: "gold",
       avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
+    },
+    {
+      id: "user-2",
+      email: "brands@subbi.co",
+      name: "Isabella Turner",
+      role: "brand",
+      membershipTier: "platinum",
+      avatarUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200",
     },
   ]).returning();
   console.log(`✓ Created ${users.length} users`);

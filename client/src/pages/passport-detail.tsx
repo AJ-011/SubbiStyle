@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRoute, Link } from "wouter";
 import { useState, type ReactNode } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,8 +12,10 @@ import { apiRequest } from "@/lib/queryClient";
 import type { GarmentWithDetails, UserPassport } from "@shared/schema";
 
 export default function PassportDetail() {
-  const userId = "user-1";
+  const { user, loading: authLoading } = useAuth();
+  const [, navigate] = useLocation();
   const [, params] = useRoute("/passport/:garmentId");
+  const userId = user?.id;
   const garmentId = params?.garmentId;
   const queryClient = useQueryClient();
 
@@ -20,13 +24,17 @@ export default function PassportDetail() {
     enabled: !!garmentId,
   });
 
-  const { data: userPassport } = useQuery<UserPassport>({
+  const { data: userPassport } = useQuery<UserPassport | null>({
     queryKey: ["/api/users", userId, "passport"],
     enabled: !!userId,
   });
 
   const { mutate: trackAnalytics } = useMutation({
     mutationFn: async (data: { action: string; metadata?: any }) => {
+      if (!user || !garmentId) {
+        return null;
+      }
+
       return apiRequest("POST", "/api/analytics", {
         garmentId,
         action: data.action,
@@ -34,34 +42,63 @@ export default function PassportDetail() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/garments", garmentId, "analytics"] });
+      if (user && garmentId) {
+        queryClient.invalidateQueries({ queryKey: ["/api/garments", garmentId, "analytics"] });
+      }
     },
   });
 
   const hasPurchased = Boolean(
-    userPassport?.stamps.some((stamp) => stamp.garment.id === garmentId),
+    user && userPassport?.stamps.some((stamp) => stamp.garment.id === garmentId)
   );
 
-  const renderProtected = (content: ReactNode) => {
+  const handlePurchaseClick = () => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+
+    // TODO: Integrate checkout flow
+    navigate('/shop');
+  };
+
+const renderProtected = (content: ReactNode) => {
     if (hasPurchased) {
       return content;
     }
+
+    const message = user
+      ? "Purchase to unlock stamp"
+      : "Sign in to unlock passport";
 
     return (
       <div className="relative">
         <div className="pointer-events-none select-none filter blur-sm opacity-60">
           {content}
         </div>
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
           <div className="bg-background/95 border border-primary px-6 py-3 rounded-full text-primary font-semibold shadow-lg">
-            Purchase to unlock stamp
+            {message}
           </div>
+          {user ? (
+            <Button className="px-6" onClick={() => navigate('/shop')}>
+              Browse Garments
+            </Button>
+          ) : (
+            <Button className="px-6" onClick={() => navigate('/auth')}>
+              Log In / Sign Up
+            </Button>
+          )}
         </div>
       </div>
     );
   };
 
   const handleTabChange = (section: string) => {
+    if (!user || !garmentId) {
+      return;
+    }
+
     trackAnalytics({ 
       action: `view_${section}`,
       metadata: { section }
@@ -161,8 +198,8 @@ export default function PassportDetail() {
 
               <div className="flex flex-col gap-2 mb-6">
                 <span className="text-3xl font-serif font-bold" data-testid="passport-price">${Number(garment.price).toFixed(2)}</span>
-                <Button className="px-8" data-testid="button-purchase">
-                  Purchase
+                <Button className="px-8" data-testid="button-purchase" onClick={handlePurchaseClick}>
+                  {user ? "Purchase" : "Log In to Purchase"}
                 </Button>
               </div>
             </div>

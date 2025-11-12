@@ -9,6 +9,7 @@ import Shop from "@/pages/shop";
 import PassportDetail from "@/pages/passport-detail";
 import MyPassport from "@/pages/my-passport";
 import BrandDashboard from "@/pages/brand-dashboard";
+import AuthPage from "@/pages/auth";
 import Sidebar from "@/components/layout/sidebar";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
           <Route path="/passport/:garmentId" component={PassportDetail} />
           <Route path="/my-passport" component={MyPassport} />
           <Route path="/brand-dashboard" component={BrandDashboard} />
+          <Route path="/auth" component={AuthPage} />
           <Route component={NotFound} />
         </Switch>
       </main>

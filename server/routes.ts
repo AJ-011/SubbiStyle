@@ -8,9 +8,19 @@ import {
   insertCareInstructionsSchema, insertStampSchema, insertAnalyticsSchema
 } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { requireAuth, requireRole } from "./middleware/auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   console.log("[startup][routes] Registering HTTP routes");
+
+  app.get("/api/me", (req, res) => {
+    if (!req.user) {
+      return res.json(null);
+    }
+
+    res.json(req.user);
+  });
+
   // Garment routes
   app.get("/api/garments", async (req, res) => {
     try {
@@ -41,7 +51,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/garments", async (req, res) => {
+  app.post("/api/garments", requireRole("brand"), async (req, res) => {
     try {
       const validatedData = insertGarmentSchema.parse(req.body);
       const garment = await storage.createGarment(validatedData);
@@ -100,9 +110,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User passport routes
-  app.get("/api/users/:userId/passport", async (req, res) => {
+  app.get("/api/users/:userId/passport", requireAuth, async (req, res) => {
     try {
       const { userId } = req.params;
+      if (!req.user || req.user.id !== userId) {
+        return res.status(403).json({ message: "You can only view your own passport" });
+      }
       const passport = await storage.getUserPassport(userId);
       res.json(passport);
     } catch (error) {
@@ -112,14 +125,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Stamp routes
-  app.post("/api/stamps", async (req, res) => {
+  app.post("/api/stamps", requireAuth, async (req, res) => {
     try {
-      const validatedData = insertStampSchema.parse(req.body);
+      const payload = {
+        ...req.body,
+        userId: req.user!.id,
+      };
+      const validatedData = insertStampSchema.parse(payload);
       const stamp = await storage.createStamp(validatedData);
       
       // Track unlock analytics
       await storage.trackAnalytics({
-        userId: stamp.userId,
+        userId: req.user!.id,
         garmentId: stamp.garmentId,
         action: "view_passport",
         metadata: { stampId: stamp.id } as any,
@@ -165,7 +182,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/brands", async (req, res) => {
+  app.post("/api/brands", requireRole("brand"), async (req, res) => {
     try {
       const validatedData = insertBrandSchema.parse(req.body);
       const brand = await storage.createBrand(validatedData);
@@ -177,7 +194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Artisan routes
-  app.post("/api/artisans", async (req, res) => {
+  app.post("/api/artisans", requireRole("brand"), async (req, res) => {
     try {
       const validatedData = insertArtisanSchema.parse(req.body);
       const artisan = await storage.createArtisan(validatedData);
@@ -232,7 +249,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Impact metrics routes
-  app.post("/api/impact-metrics", async (req, res) => {
+  app.post("/api/impact-metrics", requireRole("brand"), async (req, res) => {
     try {
       const validatedData = insertImpactMetricsSchema.parse(req.body);
       const metrics = await storage.createImpactMetrics(validatedData);
@@ -244,7 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Cultural content routes
-  app.post("/api/cultural-content", async (req, res) => {
+  app.post("/api/cultural-content", requireRole("brand"), async (req, res) => {
     try {
       const validatedData = insertCulturalContentSchema.parse(req.body);
       const content = await storage.createCulturalContent(validatedData);
@@ -256,7 +273,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Care instructions routes
-  app.post("/api/care-instructions", async (req, res) => {
+  app.post("/api/care-instructions", requireRole("brand"), async (req, res) => {
     try {
       const validatedData = insertCareInstructionsSchema.parse(req.body);
       const instructions = await storage.createCareInstructions(validatedData);
@@ -268,7 +285,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // NFC/QR code generation routes
-  app.post("/api/nfc-codes", async (req, res) => {
+  app.post("/api/nfc-codes", requireRole("brand"), async (req, res) => {
     try {
       const validatedData = insertNfcCodeSchema.parse(req.body);
       const nfcCode = await storage.createNfcCode(validatedData);
@@ -280,9 +297,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Analytics routes
-  app.post("/api/analytics", async (req, res) => {
+  app.post("/api/analytics", requireAuth, async (req, res) => {
     try {
-      const validatedData = insertAnalyticsSchema.parse(req.body);
+      const payload = {
+        ...req.body,
+        userId: req.user!.id,
+      };
+      const validatedData = insertAnalyticsSchema.parse(payload);
       const analytics = await storage.trackAnalytics(validatedData);
       res.status(201).json(analytics);
     } catch (error) {
